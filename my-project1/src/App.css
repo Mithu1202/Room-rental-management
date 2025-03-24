@@ -1,0 +1,16 @@
+.active {
+    background-color: aqua;
+}
+.mainSideBar{
+    position: fixed;
+    top: 60px;
+    left: 0;
+    z-index: 2;
+}
+
+.contentBody{
+    width: calc(100vw - 250px);
+    position: fixed;
+    right: 0;
+    top: 60px;
+}

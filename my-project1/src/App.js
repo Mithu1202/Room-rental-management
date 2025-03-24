@@ -5,10 +5,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import CustomerDashboard from "./pages/CustomerDashboard";
-import AdminDashboard from "./pages/Dashboard";
-import AdminuserManage from "./pages/AdminUserManagement";
 import Home from "./pages/HomePage";
-import Book from "./pages/BookingManagement";
+import AdminAnnouncements from "./pages/AdminAnnouncements";
+import AdminNotifications from "./pages/AdminNotifications";
+import AdminDashboard from "./pages/AdminDashboard";
 
 
 function App() {
@@ -23,9 +23,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<CustomerDashboard />} />
-        <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/AdminuserManage" element={<AdminuserManage />} />
-        <Route path="/book" element={<Book />} />
+        <Route path="/adminAnnouncements" element={<AdminAnnouncements />} />
+        <Route path="/adminNotifications" element={<AdminNotifications />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
 
       </Routes>
       <Footer />

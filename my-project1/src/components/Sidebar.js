@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../logo.png"; // Make sure the path is correct
 
 const Sidebar = () => {
@@ -9,14 +9,13 @@ const Sidebar = () => {
         <h2 style={titleStyle}>Serene Admin</h2>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <a href="/book" style={linkStyle}>
-          <i className="fas fa-tachometer-alt" style={iconStyle}></i>Announcements
+        <a href="/adminDashboard" style={linkStyle}>
+          <i className="fas fa-tachometer-alt" style={iconStyle}></i>Dashboard
         </a>
-        <a href="/admindashboard" style={linkStyle}>
-          
-          <i className="fas fa-calendar-alt" style={iconStyle}></i>Dashboard
+        <a href="/adminAnnouncements"  style={linkStyle}> 
+          <i className="fas fa-calendar-alt" style={iconStyle}></i>Announcements
         </a>
-        <a href="/AdminuserManage" style={linkStyle}>
+        <a href="/adminNotifications"  style={linkStyle}>
           <i className="fas fa-users" style={iconStyle}></i>Notifications
         </a>
       </div>
@@ -31,8 +30,8 @@ const headerStyle = {
 };
 
 const logoStyle = {
-  width: "40px", // Adjust size as needed
-  height: "40px", // Adjust size as needed
+  width: "40px",
+  height: "40px",
   marginRight: "10px"
 };
 

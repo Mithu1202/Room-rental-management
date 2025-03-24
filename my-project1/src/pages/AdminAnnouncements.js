@@ -4,8 +4,8 @@ import Topbar from "../components/Topbar";
 import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
 
-const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("users");
+const Announcements = () => {
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [users, setUsers] = useState([{
     role: "",
     _id: "",
@@ -17,7 +17,6 @@ const Dashboard = () => {
     periodOfStay: "",
     actions: []
 }]);
-  const [tourGuides, setTourGuides] = useState([]);
   const [formData, setFormData] = useState({ name: "", email: "", assignedTours: "", status: "Active" });
   const [editId, setEditId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -38,7 +37,7 @@ const Dashboard = () => {
 
   const handleSendNotification = async (e) => {
     e.preventDefault();
-    const apiUrl = "http://localhost:5000/api/notifications/send"; // Assuming this is your notifications API
+    const apiUrl = "http://localhost:5000/api/notifications/send";
   
     try {
       await axios.post(apiUrl, { 
@@ -57,43 +56,14 @@ const Dashboard = () => {
     }
   };
 
-  
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
-
-    try {
-      await axios.post(apiUrl, formData);
-      fetchData();
-      setFormData({ name: "", email: "", assignedTours: "", status: "Active" });
-      setShowForm(false);
-    } catch (error) {
-      console.error("Error adding data:", error);
-    }
-  };
-
   const handleSend = (item) => {
     setFormData(item);
     setEditId(item._id);
     setShowEditModal(true);
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
-
-    try {
-      await axios.put(`${apiUrl}/${editId}`, formData);
-      fetchData();
-      setShowEditModal(false);
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-  };
-
   const handleDelete = async (id) => {
-    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
+    const apiUrl = "http://localhost:5000/api/users/user";
 
     try {
       await axios.delete(`${apiUrl}/${id}`);
@@ -110,9 +80,14 @@ const Dashboard = () => {
         <Topbar />
 
         <div className="p-6">
-          <button onClick={() => setShowForm(true)} className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md">
-            ➕ Add New
-          </button>
+        <div className="flex gap-6 mb-6">
+            <span
+              onClick={() => setActiveTab("Announcements")}
+              className={`cursor-pointer pb-2 border-b-2 ${activeTab === "Announcements" ? "border-black font-bold" : "text-gray-500"}`}
+            >
+              User Details
+            </span>
+          </div>
             <StickyHeadTable
             columns = {[
               { id: 'roomNo', label: 'Room No', minWidth: 100 },
@@ -140,17 +115,16 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Full-Screen Add/Edit Form Popup */}
       {(showForm || showEditModal) && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ position: "fixed", zIndex: '3' }}>
           <div className="bg-white p-8 rounded-lg w-96">
             <h2 className="text-xl font-semibold mb-4">{showForm ? `Add ${activeTab === "users" ? "Driver" : "Tour Guide"}` : `Edit ${activeTab === "users" ? "Driver" : "Tour Guide"}`}</h2>
-            <form onSubmit={showForm ? handleAdd : handleSendNotification} className="flex flex-col gap-3">
+            <form onSubmit={handleSendNotification} className="flex flex-col gap-3">
 
               <input type="text" placeholder="Room No" value={formData.roomNo} onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="border p-2 rounded-lg" required />
-              <input type="text" placeholder="Guests" value={formData.guests+' guests'} onChange={(e) => setFormData({ ...formData, guests: e.target.value })} className="border p-2 rounded-lg" required />
+              <input type="text" placeholder="Guests" value={(formData.guests)+' guests'} onChange={(e) => setFormData({ ...formData, guests: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Check-in Date" value={formData.checkInDate} onChange={(e) => setFormData({ ...formData, checkInDate: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Period of Stay" value={formData.periodOfStay+' days'} onChange={(e) => setFormData({ ...formData, periodOfStay: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Announcement Message" onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="border p-2 rounded-lg" required />
@@ -165,4 +139,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Announcements;
