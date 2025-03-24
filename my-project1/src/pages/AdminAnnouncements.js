@@ -114,6 +114,7 @@ const Announcements = () => {
                 periodOfStay: user.periodOfStay,
                 actions: 
                   <div style={{display:"flex", gap:"15px", justifyContent:"center"}}>
+                    {/* <button onClick={() => handleEdit(user._id)} className="text-blue-600">✏️</button> */}
                     <button onClick={() => handleSend(user)} className="text-blue-600"><i class="fa fa-envelope" aria-hidden="true"></i></button>
                     <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
