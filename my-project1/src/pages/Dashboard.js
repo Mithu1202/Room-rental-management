@@ -2,12 +2,23 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
+import StickyHeadTable from "../components/StickyHeadTable";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("drivers");
-  const [drivers, setDrivers] = useState([]);
+  const [activeTab, setActiveTab] = useState("users");
+  const [users, setUsers] = useState([{
+    role: "",
+    _id: "",
+    roomNo: "",
+    name: "",
+    email: "",
+    guests: 0,
+    checkInDate: "",
+    periodOfStay: "",
+    actions: []
+}]);
   const [tourGuides, setTourGuides] = useState([]);
-  const [formData, setFormData] = useState({ name: "", contactInfo: "", assignedTours: "", status: "Active" });
+  const [formData, setFormData] = useState({ name: "", email: "", assignedTours: "", status: "Active" });
   const [editId, setEditId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -18,38 +29,59 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const driversRes = await axios.get("http://localhost:5000/api/drivers");
-      const guidesRes = await axios.get("http://localhost:5000/api/tour-guides");
-      setDrivers(driversRes.data);
-      setTourGuides(guidesRes.data);
+      const usersRes = await axios.get("http://localhost:5000/api/users/users");
+      setUsers(usersRes.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const handleSendNotification = async (e) => {
+    e.preventDefault();
+    const apiUrl = "http://localhost:5000/api/notifications/send"; // Assuming this is your notifications API
+  
+    try {
+      await axios.post(apiUrl, { 
+        roomNo: formData.roomNo,
+        name: formData.name, 
+        email: formData.email, 
+        guests: formData.guests, 
+        checkInDate: formData.checkInDate, 
+        periodOfStay: formData.periodOfStay, 
+        message: formData.message,
+      });
+      fetchData();
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Error sending notification:", error);
+    }
+  };
+
+  
+
   const handleAdd = async (e) => {
     e.preventDefault();
-    const apiUrl = activeTab === "drivers" ? "http://localhost:5000/api/drivers" : "http://localhost:5000/api/tour-guides";
+    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
 
     try {
       await axios.post(apiUrl, formData);
       fetchData();
-      setFormData({ name: "", contactInfo: "", assignedTours: "", status: "Active" });
+      setFormData({ name: "", email: "", assignedTours: "", status: "Active" });
       setShowForm(false);
     } catch (error) {
       console.error("Error adding data:", error);
     }
   };
 
-  const handleEdit = (item) => {
-    setFormData({ name: item.name, contactInfo: item.contactInfo, assignedTours: item.assignedTours, status: item.status });
+  const handleSend = (item) => {
+    setFormData(item);
     setEditId(item._id);
     setShowEditModal(true);
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const apiUrl = activeTab === "drivers" ? "http://localhost:5000/api/drivers" : "http://localhost:5000/api/tour-guides";
+    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
 
     try {
       await axios.put(`${apiUrl}/${editId}`, formData);
@@ -61,7 +93,7 @@ const Dashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    const apiUrl = activeTab === "drivers" ? "http://localhost:5000/api/drivers" : "http://localhost:5000/api/tour-guides";
+    const apiUrl = activeTab === "users" ? "http://localhost:5000/api/users" : "http://localhost:5000/api/tour-guides";
 
     try {
       await axios.delete(`${apiUrl}/${id}`);
@@ -78,61 +110,52 @@ const Dashboard = () => {
         <Topbar />
 
         <div className="p-6">
-          {/* Tabs */}
-          <div className="flex gap-6 mb-6">
-            <span onClick={() => setActiveTab("drivers")} className={`cursor-pointer pb-2 border-b-2 ${activeTab === "drivers" ? "border-black font-bold" : "text-gray-500"}`}>
-              Drivers
-            </span>
-            <span onClick={() => setActiveTab("tourGuides")} className={`cursor-pointer pb-2 border-b-2 ${activeTab === "tourGuides" ? "border-black font-bold" : "text-gray-500"}`}>
-              Tour Guides
-            </span>
-          </div>
-
-          {/* Add Button */}
           <button onClick={() => setShowForm(true)} className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md">
             ➕ Add New
           </button>
-
-          {/* Data Table */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <div className="grid grid-cols-5 font-semibold pb-2 border-b border-gray-300">
-              <span>Name</span>
-              <span>Contact Info</span>
-              <span>Assigned Tours</span>
-              <span>Status</span>
-              <span>Actions</span>
-            </div>
-
-            {(activeTab === "drivers" ? drivers : tourGuides).map((item) => (
-              <div key={item._id} className="grid grid-cols-5 py-2 border-b border-gray-100">
-                <span>{item.name} <br /><small className="text-gray-500">ID: {item._id}</small></span>
-                <span>{item.contactInfo}</span>
-                <span>{item.assignedTours}</span>
-                <span className="px-2 py-1 bg-gray-200 rounded-lg">{item.status}</span>
-                <span className="space-x-2">
-                  <button onClick={() => handleEdit(item)} className="text-blue-600">✏️</button>
-                  <button onClick={() => handleDelete(item._id)} className="text-red-600">🗑️</button>
-                </span>
-              </div>
-            ))}
-          </div>
+            <StickyHeadTable
+            columns = {[
+              { id: 'roomNo', label: 'Room No', minWidth: 100 },
+              { id: 'name', label: 'Name', minWidth: 150 },
+              { id: 'email', label: 'Email', minWidth: 200 },
+              { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
+              { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
+              { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
+              { id: 'actions', label: 'Actions', minWidth: 120, align: 'center' }
+            ]}
+            rows={users.map(user => user.role == "user" && ({
+                roomNo: user.roomNo,
+                name: user.name,
+                email: user.email,
+                guests: user.guests,
+                checkInDate: user.checkInDate,
+                periodOfStay: user.periodOfStay,
+                actions: 
+                  <div>
+                    <button onClick={() => handleSend(user)} className="text-blue-600">📩</button>
+                    <button onClick={() => handleDelete(user._id)} className="text-red-600">🗑️</button>
+                  </div>
+            })
+            )}/>
         </div>
       </div>
 
       {/* Full-Screen Add/Edit Form Popup */}
       {(showForm || showEditModal) && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ position: "fixed", zIndex: '3' }}>
           <div className="bg-white p-8 rounded-lg w-96">
-            <h2 className="text-xl font-semibold mb-4">{showForm ? `Add ${activeTab === "drivers" ? "Driver" : "Tour Guide"}` : `Edit ${activeTab === "drivers" ? "Driver" : "Tour Guide"}`}</h2>
-            <form onSubmit={showForm ? handleAdd : handleUpdate} className="flex flex-col gap-3">
+            <h2 className="text-xl font-semibold mb-4">{showForm ? `Add ${activeTab === "users" ? "Driver" : "Tour Guide"}` : `Edit ${activeTab === "users" ? "Driver" : "Tour Guide"}`}</h2>
+            <form onSubmit={showForm ? handleAdd : handleSendNotification} className="flex flex-col gap-3">
+
+              <input type="text" placeholder="Room No" value={formData.roomNo} onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="border p-2 rounded-lg" required />
-              <input type="text" placeholder="Contact Info" value={formData.contactInfo} onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })} className="border p-2 rounded-lg" required />
-              <input type="text" placeholder="Assigned Tours" value={formData.assignedTours} onChange={(e) => setFormData({ ...formData, assignedTours: e.target.value })} className="border p-2 rounded-lg" required />
-              <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} className="border p-2 rounded-lg">
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-              <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg">{showForm ? "Add" : "Update"}</button>
+              <input type="text" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="border p-2 rounded-lg" required />
+              <input type="text" placeholder="Guests" value={formData.guests+' guests'} onChange={(e) => setFormData({ ...formData, guests: e.target.value })} className="border p-2 rounded-lg" required />
+              <input type="text" placeholder="Check-in Date" value={formData.checkInDate} onChange={(e) => setFormData({ ...formData, checkInDate: e.target.value })} className="border p-2 rounded-lg" required />
+              <input type="text" placeholder="Period of Stay" value={formData.periodOfStay+' days'} onChange={(e) => setFormData({ ...formData, periodOfStay: e.target.value })} className="border p-2 rounded-lg" required />
+              <input type="text" placeholder="Announcement Message" onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="border p-2 rounded-lg" required />
+              <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg">{showForm ? "Add" : "Send"}</button>
+
               <button onClick={() => (showForm ? setShowForm(false) : setShowEditModal(false))} className="bg-gray-300 text-black py-2 rounded-lg">Cancel</button>
             </form>
           </div>

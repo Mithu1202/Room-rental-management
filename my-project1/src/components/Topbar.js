@@ -5,7 +5,7 @@ const Topbar = () => {
     <div style={{ display: "flex", justifyContent: "space-between", padding: "15px 20px", background: "#fff", borderBottom: "1px solid #ddd" }}>
       <h2 style={{ fontSize: "22px", fontWeight: "bold" }}>Admin Booking Management</h2>
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        <span>🔔</span>
+        <span style={{cursor:"pointer"}}>🔔</span>
         <span>👤</span>
       </div>
     </div>

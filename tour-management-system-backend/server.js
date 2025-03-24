@@ -13,10 +13,8 @@ app.use(express.json());
 app.use(cors());
 
 // Use the routes
-app.use("/api/users", require("./routes/userRoutes")); 
-app.use("/api/drivers", require("./routes/driverRoutes"));
-app.use("/api/tour-guides", require("./routes/tourGuideRoutes"));
-app.use("/api/tour-requests", require("./routes/tourRequestRoutes")); // Add this line for tour requests
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/notifications", require("./routes/notificationRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

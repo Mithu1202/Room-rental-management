@@ -7,10 +7,8 @@ import Profile from "./pages/Profile";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import AdminDashboard from "./pages/Dashboard";
 import AdminuserManage from "./pages/AdminUserManagement";
-import AdminCustomTour from "./pages/AdminCustomtour";
 import Home from "./pages/HomePage";
 import Book from "./pages/BookingManagement";
-
 
 
 function App() {
@@ -27,7 +25,6 @@ function App() {
         <Route path="/dashboard" element={<CustomerDashboard />} />
         <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/AdminuserManage" element={<AdminuserManage />} />
-        <Route path="/AdminCustomTour" element={<AdminCustomTour />} />
         <Route path="/book" element={<Book />} />
 
       </Routes>

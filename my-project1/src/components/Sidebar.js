@@ -10,17 +10,14 @@ const Sidebar = () => {
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
         <a href="/book" style={linkStyle}>
-          <i className="fas fa-tachometer-alt" style={iconStyle}></i>Dashboard
+          <i className="fas fa-tachometer-alt" style={iconStyle}></i>Announcements
         </a>
         <a href="/admindashboard" style={linkStyle}>
           
-          <i className="fas fa-calendar-alt" style={iconStyle}></i>Announcements
+          <i className="fas fa-calendar-alt" style={iconStyle}></i>Dashboard
         </a>
         <a href="/AdminuserManage" style={linkStyle}>
           <i className="fas fa-users" style={iconStyle}></i>Notifications
-        </a>
-        <a href="AdminCustomTour" style={linkStyle}>
-          <i className="fas fa-briefcase" style={iconStyle}></i>CustomTour
         </a>
       </div>
     </div>
