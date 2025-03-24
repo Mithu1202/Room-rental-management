@@ -5,7 +5,8 @@ import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
 
 const Announcements = () => {
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  
+  const [activeTab, setActiveTab] = useState("UserDetails");
   const [users, setUsers] = useState([{
     role: "",
     _id: "",
@@ -16,10 +17,17 @@ const Announcements = () => {
     checkInDate: "",
     periodOfStay: "",
     actions: []
-}]);
-  const [formData, setFormData] = useState({ name: "", email: "", assignedTours: "", status: "Active" });
-  const [editId, setEditId] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  }]);
+  const [formData, setFormData] = useState({
+    roomNo: "",
+    name: "", 
+    email: "", 
+    guests: 0, 
+    checkInDate: "",
+    periodOfStay: "",
+    message: ""
+  });
+  const [editId, setEditId] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
@@ -58,7 +66,6 @@ const Announcements = () => {
 
   const handleSend = (item) => {
     setFormData(item);
-    setEditId(item._id);
     setShowEditModal(true);
   };
 
@@ -82,8 +89,8 @@ const Announcements = () => {
         <div className="p-6">
         <div className="flex gap-6 mb-6">
             <span
-              onClick={() => setActiveTab("Announcements")}
-              className={`cursor-pointer pb-2 border-b-2 ${activeTab === "Announcements" ? "border-black font-bold" : "text-gray-500"}`}
+              onClick={() => setActiveTab("UserDetails")}
+              className={`cursor-pointer pb-2 border-b-2 ${activeTab === "UserDetails" ? "border-black font-bold" : "text-gray-500"}`}
             >
               User Details
             </span>
@@ -106,19 +113,18 @@ const Announcements = () => {
                 checkInDate: user.checkInDate,
                 periodOfStay: user.periodOfStay,
                 actions: 
-                  <div>
-                    <button onClick={() => handleSend(user)} className="text-blue-600">📩</button>
-                    <button onClick={() => handleDelete(user._id)} className="text-red-600">🗑️</button>
+                  <div style={{display:"flex", gap:"15px", justifyContent:"center"}}>
+                    <button onClick={() => handleSend(user)} className="text-blue-600"><i class="fa fa-envelope" aria-hidden="true"></i></button>
+                    <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
             })
             )}/>
         </div>
       </div>
 
-      {(showForm || showEditModal) && (
+      {(showEditModal) && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ position: "fixed", zIndex: '3' }}>
           <div className="bg-white p-8 rounded-lg w-96">
-            <h2 className="text-xl font-semibold mb-4">{showForm ? `Add ${activeTab === "users" ? "Driver" : "Tour Guide"}` : `Edit ${activeTab === "users" ? "Driver" : "Tour Guide"}`}</h2>
             <form onSubmit={handleSendNotification} className="flex flex-col gap-3">
 
               <input type="text" placeholder="Room No" value={formData.roomNo} onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })} className="border p-2 rounded-lg" required />
@@ -128,9 +134,9 @@ const Announcements = () => {
               <input type="text" placeholder="Check-in Date" value={formData.checkInDate} onChange={(e) => setFormData({ ...formData, checkInDate: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Period of Stay" value={formData.periodOfStay+' days'} onChange={(e) => setFormData({ ...formData, periodOfStay: e.target.value })} className="border p-2 rounded-lg" required />
               <input type="text" placeholder="Announcement Message" onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="border p-2 rounded-lg" required />
-              <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg">{showForm ? "Add" : "Send"}</button>
+              <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg">Send</button>
 
-              <button onClick={() => (showForm ? setShowForm(false) : setShowEditModal(false))} className="bg-gray-300 text-black py-2 rounded-lg">Cancel</button>
+              <button onClick={() => ( setShowEditModal(false))} className="bg-gray-300 text-black py-2 rounded-lg">Cancel</button>
             </form>
           </div>
         </div>
