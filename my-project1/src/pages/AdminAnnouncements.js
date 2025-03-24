@@ -95,7 +95,7 @@ const Announcements = () => {
               User Details
             </span>
           </div>
-            <StickyHeadTable
+          <StickyHeadTable
             columns = {[
               { id: 'roomNo', label: 'Room No', minWidth: 100 },
               { id: 'name', label: 'Name', minWidth: 150 },
@@ -117,8 +117,8 @@ const Announcements = () => {
                     <button onClick={() => handleSend(user)} className="text-blue-600"><i class="fa fa-envelope" aria-hidden="true"></i></button>
                     <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
-            })
-            )}/>
+            }))}
+          />
         </div>
       </div>
 

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
+import StickyHeadTable from "../components/StickyHeadTable";
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState("users");
-  const [users, setUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState("notifications");
+  const [notifications, setNotifications] = useState([]);
   const [formData, setFormData] = useState({ name: "", email: "", role: "user", password: "" });
   const [editId, setEditId] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -16,8 +17,8 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const usersRes = await axios.get("http://localhost:5000/api/users/users");
-      setUsers(usersRes.data);
+      const notificationRes = await axios.get("http://localhost:5000/api/notifications");
+      setNotifications(notificationRes.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -65,34 +66,38 @@ const AdminDashboard = () => {
           {/* Tabs */}
           <div className="flex gap-6 mb-6">
             <span
-              onClick={() => setActiveTab("users")}
-              className={`cursor-pointer pb-2 border-b-2 ${activeTab === "users" ? "border-black font-bold" : "text-gray-500"}`}
+              onClick={() => setActiveTab("notifications")}
+              className={`cursor-pointer pb-2 border-b-2 ${activeTab === "notifications" ? "border-black font-bold" : "text-gray-500"}`}
             >
               Admin User Management
             </span>
           </div>
-
-          {/* Data Table */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <div className="grid grid-cols-5 font-semibold pb-2 border-b border-gray-300">
-              <span>Name</span>
-              <span>Email</span>
-              <span>Role</span>
-              <span>Actions</span>
-            </div>
-
-            {users.map((item) => (
-              <div key={item._id} className="grid grid-cols-5 py-2 border-b border-gray-100">
-                <span>{item.name} <br /><small className="text-gray-500">ID: {item._id}</small></span>
-                <span>{item.email}</span>
-                <span>{item.role}</span>
-                <span className="space-x-2">
-                  <button onClick={() => handleEdit(item)} className="text-blue-600">✏️</button>
-                  <button onClick={() => handleDelete(item._id)} className="text-red-600">🗑️</button>
-                </span>
-              </div>
-            ))}
-          </div>
+          <StickyHeadTable
+            columns = {[
+              { id: 'roomNo', label: 'Room No', minWidth: 100 },
+              { id: 'name', label: 'Name', minWidth: 150 },
+              { id: 'email', label: 'Email', minWidth: 200 },
+              { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
+              { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
+              { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
+              { id: 'message', label: 'message', minWidth: 150, align: 'center' },
+              { id: 'actions', label: 'Actions', minWidth: 120, align: 'center' }
+            ]}
+            rows={notifications.map(user => user.role == "user" && ({
+                roomNo: user.roomNo,
+                name: user.name,
+                email: user.email,
+                guests: user.guests,
+                checkInDate: user.checkInDate,
+                periodOfStay: user.periodOfStay,
+                message: user.message,
+                actions: 
+                  <div style={{display:"flex", gap:"15px", justifyContent:"center"}}>
+                    <button onClick={() => handleEdit(user._id)} className="text-blue-600">✏️</button>
+                    <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                  </div>
+            }))}
+          />
         </div>
       </div>
 
