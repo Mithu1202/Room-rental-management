@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
+import { toast } from "react-toastify";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("notifications");
@@ -48,11 +49,15 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
+    const apiUrl = "http://localhost:5000/api/users/user";
+
     try {
-      await axios.delete(`http://localhost:5000/api/users/user/${id}`);
+      await axios.delete(`${apiUrl}/${id}`);
       fetchData();
+      toast.success("Announcement notification deleted successfully!");
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error("Error deleting data:", error);
+      toast.error("Failed to delete announcement notification.");
     }
   };
 
@@ -93,6 +98,7 @@ const AdminDashboard = () => {
                 message: user.message,
                 actions: 
                   <div style={{display:"flex", gap:"15px", justifyContent:"center"}}>
+                    {/* <button onClick={() => handleView(user._id)} className="text-blue-600"><i class="fa fa-eye" aria-hidden="true"></i></button> */}
                     <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
             }))}
