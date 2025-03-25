@@ -3,10 +3,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const mongoose = require('mongoose');
 
-
 const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
-
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "User already exists" });
@@ -25,7 +23,6 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid Credentials" });
@@ -33,9 +30,7 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid Credentials" });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
   } catch (error) {
@@ -76,10 +71,9 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({role:'user'});
+    const users = await User.find({ role: "user" });
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
@@ -96,7 +90,7 @@ const updateUserByAdmin = async (req, res) => {
 
     if (name) user.name = name;
     if (email) user.email = email;
-    if (role) user.role = role; 
+    if (role) user.role = role;
     if (password) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
@@ -105,6 +99,8 @@ const updateUserByAdmin = async (req, res) => {
     await user.save();
     res.json({ message: "User updated successfully", user });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -136,5 +132,5 @@ module.exports = {
   getUserProfile,
   getAllUsers,
   updateUserByAdmin,
-  deleteUserByAdmin
+  deleteUserByAdmin,
 };

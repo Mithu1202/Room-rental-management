@@ -17,12 +17,12 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Protected routes (user profile management)
-router.put("/profile", authMiddleware, updateUserProfile); // Update user profile
-router.get("/profile", authMiddleware, getUserProfile); // Get user profile
+router.put("/profile", authMiddleware, updateUserProfile);
+router.get("/profile", authMiddleware, getUserProfile);
 
-// Admin-only routes (for admin management of users)
-router.get("/users", getAllUsers); // Admin - Get all users
-router.put("/user/:userId", updateUserByAdmin); // Admin - Update user
-router.delete("/user/:userId",deleteUserByAdmin); // Admin - Delete user
+// Admin-only routes
+router.get("/users", getAllUsers);
+router.put("/user/:userId", updateUserByAdmin);
+router.delete("/user/:userId", deleteUserByAdmin);
 
 module.exports = router;

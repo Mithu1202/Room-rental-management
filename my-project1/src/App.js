@@ -9,10 +9,14 @@ import Home from "./pages/HomePage";
 import AdminAnnouncements from "./pages/AdminAnnouncements";
 import AdminNotifications from "./pages/AdminNotifications";
 import AdminDashboard from "./pages/AdminDashboard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <Router>
       <Header />
       <Routes>
@@ -30,6 +34,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
+    </>
   );
 }
 
