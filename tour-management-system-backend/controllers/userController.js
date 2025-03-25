@@ -83,19 +83,19 @@ const getAllUsers = async (req, res) => {
 const updateUserByAdmin = async (req, res) => {
   try {
     const { userId } = req.params; 
-    const { name, email, password, role } = req.body;
+    const { name, email, roomNo, guests, checkInDate, periodOfStay, role } = req.body;
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     if (name) user.name = name;
     if (email) user.email = email;
+    if (roomNo) user.roomNo = roomNo;
+    if (guests) user.guests = guests;
+    if (checkInDate) user.checkInDate = checkInDate;
+    if (periodOfStay) user.periodOfStay = periodOfStay;
     if (role) user.role = role;
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
-    }
-
+    
     await user.save();
     res.json({ message: "User updated successfully", user });
   } catch (error) {
