@@ -175,12 +175,42 @@ const Announcements = () => {
                   type="number"
                   placeholder="Guests"
                   style={{ width: "70%" }}
-                  value={formData.guests || ""}
-                  onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                  value={formData.guests}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value > 0) {
+                      setFormData({ ...formData, guests: value });
+                    }
+                  }}
+                  min="1"
                   className="border p-2 rounded-lg"
                   required
                 />
                 <p>Guests</p>
+              </div>
+              <input 
+                type="date" 
+                placeholder="Check-in Date" 
+                value={formData.checkInDate} 
+                onChange={(e) => setFormData({ ...formData, checkInDate: e.target.value })} 
+                className="border p-2 rounded-lg" 
+                required />
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <input 
+                  type="number" 
+                  placeholder="Period of Stay" 
+                  style={{ width: "70%" }}
+                  value={formData.periodOfStay} 
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value > 0) {
+                      setFormData({ ...formData, periodOfStay: value });
+                    }
+                  }}
+                  min="1"
+                  className="border p-2 rounded-lg" 
+                  required />
+                  <p>Days</p>
               </div>
               {!isEditMode && (
                 <input
