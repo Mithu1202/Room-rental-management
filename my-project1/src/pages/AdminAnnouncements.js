@@ -152,7 +152,8 @@ const Announcements = () => {
                 value={formData.roomNo}
                 onChange={(e) => setFormData({ ...formData, roomNo: e.target.value })}
                 className="border p-2 rounded-lg"
-                required
+                required={isEditMode}
+                disabled={!isEditMode}
               />
               <input
                 type="text"
@@ -160,7 +161,8 @@ const Announcements = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="border p-2 rounded-lg"
-                required
+                required={isEditMode}
+                disabled={!isEditMode}
               />
               <input
                 type="text"
@@ -168,7 +170,8 @@ const Announcements = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="border p-2 rounded-lg"
-                required
+                required={isEditMode}
+                disabled={!isEditMode}
               />
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <input
@@ -184,7 +187,8 @@ const Announcements = () => {
                   }}
                   min="1"
                   className="border p-2 rounded-lg"
-                  required
+                  required={isEditMode}
+                  disabled={!isEditMode}
                 />
                 <p>Guests</p>
               </div>
@@ -194,7 +198,9 @@ const Announcements = () => {
                 value={formData.checkInDate} 
                 onChange={(e) => setFormData({ ...formData, checkInDate: e.target.value })} 
                 className="border p-2 rounded-lg" 
-                required />
+                required={isEditMode}
+                disabled={!isEditMode} 
+              />
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <input 
                   type="number" 
@@ -208,9 +214,11 @@ const Announcements = () => {
                     }
                   }}
                   min="1"
-                  className="border p-2 rounded-lg" 
-                  required />
-                  <p>Days</p>
+                  className="border p-2 rounded-lg"
+                  required={isEditMode}
+                  disabled={!isEditMode}
+                />
+                <p>Days</p>
               </div>
               {!isEditMode && (
                 <input
