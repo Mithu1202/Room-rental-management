@@ -12,6 +12,9 @@ const AdminDashboard = () => {
   const [editId, setEditId] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const [viewData, setViewData] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -45,6 +48,16 @@ const AdminDashboard = () => {
       setShowEditModal(false);
     } catch (error) {
       console.error("Error updating user:", error);
+    }
+  };
+
+  const handleView = async (id) => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/notifications/${id}`);
+      setViewData(res.data);
+      setShowViewModal(true);
+    } catch (error) {
+      console.error("Error fetching notification details:", error);
     }
   };
 
@@ -82,30 +95,51 @@ const AdminDashboard = () => {
               { id: 'roomNo', label: 'Room No', minWidth: 100 },
               { id: 'name', label: 'Name', minWidth: 150 },
               { id: 'email', label: 'Email', minWidth: 200 },
-              { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
-              { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
-              { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
-              { id: 'message', label: 'message', minWidth: 150, align: 'center' },
+              // { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
+              // { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
+              // { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
+              { id: 'message', label: 'message', minWidth: 200, align: 'center' },
               { id: 'actions', label: 'Actions', minWidth: 120, align: 'center' }
             ]}
             rows={notifications.map(user => user.role == "user" && ({
                 roomNo: user.roomNo,
                 name: user.name,
                 email: user.email,
-                guests: user.guests,
-                checkInDate: user.checkInDate,
-                periodOfStay: user.periodOfStay,
+                // guests: user.guests,
+                // checkInDate: user.checkInDate,
+                // periodOfStay: user.periodOfStay,
                 message: user.message,
                 actions: 
                   <div style={{display:"flex", gap:"15px", justifyContent:"center"}}>
-                    {/* <button onClick={() => handleView(user._id)} className="text-blue-600"><i class="fa fa-eye" aria-hidden="true"></i></button> */}
+                    <button onClick={() => handleView(user._id)} className="text-blue-600"><i class="fa fa-eye" aria-hidden="true"></i></button>
                     <button onClick={() => handleDelete(user._id)} className="text-red-600"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
             }))}
           />
         </div>
       </div>
-
+      {showViewModal && viewData && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            style={{ position: "fixed", zIndex: "3" }}
+        >
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-semibold mb-4">Notification Details</h2>
+            <p><strong>Room No:</strong> {viewData.roomNo}</p>
+            <p><strong>Name:</strong> {viewData.name}</p>
+            <p><strong>Email:</strong> {viewData.email}</p>
+            <p><strong>Guests:</strong> {viewData.guests}</p>
+            <p><strong>Check-in Date:</strong> {viewData.checkInDate}</p>
+            <p><strong>Period of Stay:</strong> {viewData.periodOfStay}</p>
+            <p><strong>Message:</strong> {viewData.message}</p>
+            <button
+              onClick={() => setShowViewModal(false)}
+              className="bg-gray-300 text-black py-2 px-4 rounded-lg mt-4"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )} 
       {/* Full-Screen Edit Form Popup */}
       {showEditModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
