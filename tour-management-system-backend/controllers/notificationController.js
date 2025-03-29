@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Notification = require("../models/Notification");
 const sendEmail = require("../utils/emailService");
 const mailTemplate = require("../views/mailTemplate");
@@ -33,7 +34,30 @@ const getNotifications = async (req, res) => {
   }
 };
 
+const deleteNotificationByAdmin = async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(notificationId)) {
+      return res.status(400).json({ message: "Invalid notification ID format" });
+    }
+
+    const notification = await Notification.findById(notificationId);
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+    
+    await Notification.deleteOne({ _id: notificationId });
+
+    res.json({ message: "Notification deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting notification:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 module.exports = {
     sendNotification,
     getNotifications,
+    deleteNotificationByAdmin
 };

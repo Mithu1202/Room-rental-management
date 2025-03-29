@@ -49,7 +49,7 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    const apiUrl = "http://localhost:5000/api/users/user";
+    const apiUrl = "http://localhost:5000/api/notifications";
 
     try {
       await axios.delete(`${apiUrl}/${id}`);
