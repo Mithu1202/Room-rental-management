@@ -34,6 +34,18 @@ const getNotifications = async (req, res) => {
   }
 };
 
+const getNotificationById = async (req, res) => {
+  try {
+    const notification = await Notification.findById(req.params.id);
+    if (!notification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+    res.status(200).json(notification);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching notification", error });
+  }
+};
+
 const deleteNotificationByAdmin = async (req, res) => {
   try {
     const { notificationId } = req.params;
@@ -46,7 +58,7 @@ const deleteNotificationByAdmin = async (req, res) => {
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
-    
+
     await Notification.deleteOne({ _id: notificationId });
 
     res.json({ message: "Notification deleted successfully" });
@@ -59,5 +71,6 @@ const deleteNotificationByAdmin = async (req, res) => {
 module.exports = {
     sendNotification,
     getNotifications,
-    deleteNotificationByAdmin
+    deleteNotificationByAdmin,
+    getNotificationById
 };
