@@ -3,14 +3,12 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const AdminNotifications = () => {
   const [activeTab, setActiveTab] = useState("notifications");
   const [notifications, setNotifications] = useState([]);
   const [formData, setFormData] = useState({ name: "", email: "", role: "user", password: "" });
-  const [editId, setEditId] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [viewData, setViewData] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,28 +23,6 @@ const AdminNotifications = () => {
       setNotifications(notificationRes.data);
     } catch (error) {
       console.error("Error fetching users:", error);
-    }
-  };
-
-  const handleEdit = (item) => {
-    setFormData({ name: item.name, email: item.email, role: item.role, password: "" });
-    setEditId(item._id);
-    setShowEditModal(true);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const updateData = { ...formData };
-      if (!formData.password) {
-        delete updateData.password;
-      }
-
-      await axios.put(`http://localhost:5000/api/users/user/${editId}`, updateData);
-      fetchData();
-      setShowEditModal(false);
-    } catch (error) {
-      console.error("Error updating user:", error);
     }
   };
 
@@ -82,20 +58,24 @@ const AdminNotifications = () => {
         user.roomNo.includes(searchQuery)
   );
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+  
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar />
+      <ToastContainer />
+      <Sidebar  activeTab={"Notifications"} onTabChange={handleTabChange} />
       <div className="flex-1">
         <Topbar />
-        <div className="p-6 flex justify-between items-center">
-          <div className="flex gap-6 mb-6">
+        <div className="p-6">
+          <div className="flex justify-between mb-6">
             <span
               onClick={() => setActiveTab("notifications")}
               className={`cursor-pointer pb-2 border-b-2 ${activeTab === "notifications" ? "border-black font-bold" : "text-gray-500"}`}
             >
               Admin User Management
             </span>
-          </div>
           <input
             type="text"
             placeholder="Search notifications..."
@@ -131,6 +111,7 @@ const AdminNotifications = () => {
             )
           }))}
         />
+        </div>
       </div>
       {showViewModal && viewData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"

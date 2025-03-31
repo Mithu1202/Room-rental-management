@@ -95,10 +95,14 @@ const AdminAnnouncements = () => {
     }
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       <ToastContainer />
-      <Sidebar />
+      <Sidebar activeTab={"Announcements"} onTabChange={handleTabChange} />
       <div className="flex-1">
         <Topbar />
         <div className="p-6">
