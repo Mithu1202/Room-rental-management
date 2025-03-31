@@ -38,6 +38,7 @@ const HomePage = () => {
         <div className="mb-6 flex justify-between items-center">
           <h2 className="text-2xl font-semibold text-gray-800">Your Notifications</h2>
           <input
+            style={{width: "25%"}}
             type="text"
             placeholder="Search by Room No, Name, or Message"
             value={searchQuery}
