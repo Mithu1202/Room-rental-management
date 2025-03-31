@@ -78,7 +78,8 @@ const AdminNotifications = () => {
       user.role === "user" &&
       (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.message.toLowerCase().includes(searchQuery.toLowerCase()))
+        user.message.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        user.roomNo.includes(searchQuery)
   );
 
   return (
