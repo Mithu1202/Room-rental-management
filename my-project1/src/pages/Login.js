@@ -14,7 +14,6 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       alert("Login Successful");
 
-      // Redirect based on user role
       if (data.user.role === "admin") {
         navigate("/adminAnnouncements");
       } else {
@@ -26,40 +25,51 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-100 to-blue-500">
-      <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow-xl">
-        <h2 className="text-3xl font-semibold text-center text-blue-600 mb-6">Welcome Back</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-400 via-blue-300 to-indigo-500">
+      <div className="relative w-full max-w-md p-8 bg-white/20 backdrop-blur-lg rounded-3xl shadow-xl border border-white/30">
+        <h2 className="text-4xl font-extrabold text-white text-center mb-6">Welcome Back</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email Input */}
+          <div className="relative">
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white focus:ring-2 focus:ring-white/60 outline-none"
             />
+            <i className="absolute right-4 top-3 text-white opacity-70 fa fa-envelope"></i>
           </div>
-          <div className="mb-6">
+          
+          {/* Password Input */}
+          <div className="relative">
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white focus:ring-2 focus:ring-white/60 outline-none"
             />
+            <i className="absolute right-4 top-3 text-white opacity-70 fa fa-lock"></i>
           </div>
-          <button className="w-full p-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+          
+          {/* Login Button */}
+          <button className="w-full py-3 bg-white text-indigo-600 font-semibold rounded-lg shadow-md hover:bg-indigo-50 transition-all duration-300">
             Login
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
+        
+        {/* Sign Up Link */}
+        <p className="mt-4 text-center text-white/80 text-sm">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:text-blue-600">
-            Sign up
+          <a href="/register" className="text-white font-semibold hover:underline">
+            Sign Up
           </a>
         </p>
       </div>
     </div>
+
   );
 };
 
