@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import roomImg from "../notification.jpg"
+import roomImg from "../notification.jpg";
 
 const HomePage = () => {
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const userEmail = localStorage.getItem("userEmail") || "";  // get the user email when user loging in so it only shows logged in specific user's notifications
 
   useEffect(() => {
     fetchNotifications();
@@ -13,7 +15,10 @@ const HomePage = () => {
   const fetchNotifications = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/notifications");
-      setNotifications(response.data);
+      const userNotifications = response.data.filter(
+        (notification) => notification.email === userEmail
+      );
+      setNotifications(userNotifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -48,7 +53,7 @@ const HomePage = () => {
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden flex mb-4">
                   <div>
                     <img
-                    style={{width: "200px", height: "180px"}}
+                      style={{ width: "200px", height: "180px" }}
                       src={roomImg}
                       alt="Notification"
                       className="w-full h-28 object-cover"
