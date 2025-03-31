@@ -6,21 +6,22 @@ import Topbar from "../components/Topbar";
 import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
 
-const Announcements = () => {
+const AdminAnnouncements = () => {
   const [activeTab, setActiveTab] = useState("UserDetails");
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     roomNo: "",
     name: "",
     email: "",
-    guests: 0,
+    guests: 1,
     checkInDate: "",
-    periodOfStay: "",
+    periodOfStay: 1,
     message: "",
   });
   const [editId, setEditId] = useState("");
   const [popup, setPopup] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -59,6 +60,15 @@ const Announcements = () => {
     }
   };
 
+  const filteredUsers = users.filter(
+    (user) =>
+      user.role === "user" &&
+      (user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.message && user.message.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+        user.roomNo.includes(searchQuery)
+  );
+
   const handleSend = (item) => {
     setFormData(item);
     setPopup(true);
@@ -92,7 +102,7 @@ const Announcements = () => {
       <div className="flex-1">
         <Topbar />
         <div className="p-6">
-          <div className="flex gap-6 mb-6">
+          <div className="flex justify-between mb-6">
             <span
               onClick={() => setActiveTab("UserDetails")}
               className={`cursor-pointer pb-2 border-b-2 ${
@@ -101,6 +111,13 @@ const Announcements = () => {
             >
               User Details
             </span>
+            <input
+              type="text"
+              placeholder="Search announcements..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border p-2 rounded-lg w-64"
+            />
           </div>
           <StickyHeadTable
             columns={[
@@ -112,17 +129,15 @@ const Announcements = () => {
               { id: "periodOfStay", label: "Period of Stay", minWidth: 150, align: "center" },
               { id: "actions", label: "Actions", minWidth: 120, align: "center" },
             ]}
-            rows={users
-              .filter((user) => user.role === "user")
-              .map((user) => ({
-                roomNo: user.roomNo,
-                name: user.name,
-                email: user.email,
-                guests: user.guests,
-                checkInDate: user.checkInDate,
-                periodOfStay: user.periodOfStay,
-                actions: (
-                  <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+            rows={filteredUsers.map((user) => user.role == "user" && ({
+              roomNo: user.roomNo,
+              name: user.name,
+              email: user.email,
+              guests: user.guests,
+              checkInDate: user.checkInDate,
+              periodOfStay: user.periodOfStay,
+              actions: (
+                <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
                     <button onClick={() => handleEdit(user, user._id)} className="text-blue-600">
                       ✏️
                     </button>
@@ -133,8 +148,8 @@ const Announcements = () => {
                       <i className="fa fa-trash" aria-hidden="true"></i>
                     </button>
                   </div>
-                ),
-              }))}
+              ),
+            }))}
           />
         </div>
       </div>
@@ -243,4 +258,4 @@ const Announcements = () => {
   );
 };
 
-export default Announcements;
+export default AdminAnnouncements;

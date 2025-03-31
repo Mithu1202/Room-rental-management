@@ -115,7 +115,7 @@ const AdminNotifications = () => {
               { id: 'message', label: 'Message', minWidth: 200, align: 'center' },
             { id: 'actions', label: 'Actions', minWidth: 120, align: 'center' }
           ]}
-          rows={filteredNotifications.map(user => ({
+          rows={filteredNotifications.map(user => user.role == "user" && ({
             roomNo: user.roomNo,
             name: user.name,
             email: user.email,
