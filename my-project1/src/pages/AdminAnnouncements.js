@@ -82,23 +82,29 @@ const AdminAnnouncements = () => {
     setIsEditMode(true);
   };
 
-  const handleDelete = async (id) => {
-    const apiUrl = "http://localhost:5000/api/users/user";
+  const handleDelete = async (id, name, email) => {
+    if (window.confirm(`Are you sure you want to delete ${name} (${email}) ?`)) {
+      const apiUrl = "http://localhost:5000/api/users/user";
 
-    try {
-      await axios.delete(`${apiUrl}/${id}`);
-      fetchData();
-      toast.success("User deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      toast.error("Failed to delete user.");
+      try {
+        await axios.delete(`${apiUrl}/${id}`);
+        fetchData();
+        toast.success("User deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting data:", error);
+        toast.error("Failed to delete user.");
+      }
     }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
       <ToastContainer />
-      <Sidebar />
+      <Sidebar activeTab={"Announcements"} onTabChange={handleTabChange} />
       <div className="flex-1">
         <Topbar />
         <div className="p-6">
@@ -144,7 +150,7 @@ const AdminAnnouncements = () => {
                     <button onClick={() => handleSend(user)} className="text-blue-600">
                       <i className="fa fa-envelope" aria-hidden="true"></i>
                     </button>
-                    <button onClick={() => handleDelete(user._id)} className="text-red-600">
+                    <button onClick={() => handleDelete(user._id, user.name, user.email)} className="text-red-600">
                       <i className="fa fa-trash" aria-hidden="true"></i>
                     </button>
                   </div>

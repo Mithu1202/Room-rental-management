@@ -3,14 +3,11 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
 import StickyHeadTable from "../components/StickyHeadTable";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const AdminNotifications = () => {
   const [activeTab, setActiveTab] = useState("notifications");
   const [notifications, setNotifications] = useState([]);
-  const [formData, setFormData] = useState({ name: "", email: "", role: "user", password: "" });
-  const [editId, setEditId] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [viewData, setViewData] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,28 +25,6 @@ const AdminNotifications = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    setFormData({ name: item.name, email: item.email, role: item.role, password: "" });
-    setEditId(item._id);
-    setShowEditModal(true);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const updateData = { ...formData };
-      if (!formData.password) {
-        delete updateData.password;
-      }
-
-      await axios.put(`http://localhost:5000/api/users/user/${editId}`, updateData);
-      fetchData();
-      setShowEditModal(false);
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-
   const handleView = async (id) => {
     try {
       const res = await axios.get(`http://localhost:5000/api/notifications/${id}`);
@@ -60,16 +35,18 @@ const AdminNotifications = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    const apiUrl = "http://localhost:5000/api/notifications";
+  const handleDelete = async (id, name, email, message) => {
+    if (window.confirm(`Are you sure you want to delete ${message} for ${name} (${email})?`)) {
+      const apiUrl = "http://localhost:5000/api/notifications";
 
-    try {
-      await axios.delete(`${apiUrl}/${id}`);
-      fetchData();
-      toast.success("Announcement notification deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      toast.error("Failed to delete announcement notification.");
+      try {
+        await axios.delete(`${apiUrl}/${id}`);
+        fetchData();
+        toast.success("Announcement notification deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting data:", error);
+        toast.error("Failed to delete announcement notification.");
+      }
     }
   };
 
@@ -82,20 +59,24 @@ const AdminNotifications = () => {
         user.roomNo.includes(searchQuery)
   );
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+  
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar />
+      <ToastContainer />
+      <Sidebar  activeTab={"Notifications"} onTabChange={handleTabChange} />
       <div className="flex-1">
         <Topbar />
-        <div className="p-6 flex justify-between items-center">
-          <div className="flex gap-6 mb-6">
+        <div className="p-6">
+          <div className="flex justify-between mb-6">
             <span
               onClick={() => setActiveTab("notifications")}
               className={`cursor-pointer pb-2 border-b-2 ${activeTab === "notifications" ? "border-black font-bold" : "text-gray-500"}`}
             >
               Admin User Management
             </span>
-          </div>
           <input
             type="text"
             placeholder="Search notifications..."
@@ -109,10 +90,10 @@ const AdminNotifications = () => {
             { id: 'roomNo', label: 'Room No', minWidth: 100 },
             { id: 'name', label: 'Name', minWidth: 150 },
             { id: 'email', label: 'Email', minWidth: 200 },
-              // { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
-              // { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
-              // { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
-              { id: 'message', label: 'Message', minWidth: 200, align: 'center' },
+            // { id: 'guests', label: 'Guests', minWidth: 100, align: 'center' },
+            // { id: 'checkInDate', label: 'Check-in Date', minWidth: 150, align: 'center' },
+            // { id: 'periodOfStay', label: 'Period of Stay', minWidth: 150, align: 'center' },
+            { id: 'message', label: 'Message', minWidth: 200, align: 'center' },
             { id: 'actions', label: 'Actions', minWidth: 120, align: 'center' }
           ]}
           rows={filteredNotifications.map(user => user.role == "user" && ({
@@ -126,11 +107,12 @@ const AdminNotifications = () => {
             actions: (
               <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
                 <button onClick={() => handleView(user._id)} className="text-blue-600"><i className="fa fa-eye" aria-hidden="true"></i></button>
-                <button onClick={() => handleDelete(user._id)} className="text-red-600"><i className="fa fa-trash" aria-hidden="true"></i></button>
+                <button onClick={() => handleDelete(user._id, user.name, user.email, user.message)} className="text-red-600"><i className="fa fa-trash" aria-hidden="true"></i></button>
               </div>
             )
           }))}
         />
+        </div>
       </div>
       {showViewModal && viewData && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
