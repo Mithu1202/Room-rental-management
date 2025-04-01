@@ -50,7 +50,7 @@ const HomePage = () => {
         <div>
           {filteredNotifications.length > 0 ? (
             filteredNotifications.map((notification) => (
-              <div key={notification.id} className="py-4">
+              <div key={notification.id} className="py-4 px-20">
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden flex mb-4">
                   <div>
                     <img
