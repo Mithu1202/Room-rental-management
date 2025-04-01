@@ -73,7 +73,7 @@ const mailTemplate = (name, roomNo, guests, checkInDate, periodOfStay, message) 
             </div>
             <div class="email-footer">
                 Thank you for choosing our service!<br>
-                <strong>Room  Management</strong>
+                <strong>Room Management</strong>
             </div>
         </div>
     </body>
