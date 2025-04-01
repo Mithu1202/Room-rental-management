@@ -6,7 +6,7 @@ const HomePage = () => {
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const userEmail = localStorage.getItem("userEmail") || "";  // get the user email when user loging in so it only shows logged in specific user's notifications
+  const userEmail = localStorage.getItem("userEmail") || "vishnavithavam@gmail.com";
 
   useEffect(() => {
     fetchNotifications();
@@ -49,7 +49,7 @@ const HomePage = () => {
 
         <div>
           {filteredNotifications.length > 0 ? (
-            filteredNotifications.map((notification) => (
+            filteredNotifications.map((notification, index) => (
               <div key={notification.id} className="py-4">
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden flex mb-4">
                   <div>
@@ -61,7 +61,7 @@ const HomePage = () => {
                     />
                   </div>
                   <div className="p-6 flex flex-col justify-between">
-                    <h3 className="text-xl font-semibold text-gray-800">{notification.title}</h3>
+                    <h3 className="text-xl font-semibold text-gray-800">{`Notification ${index + 1}`}</h3>
                     <p className="text-gray-600 mt-2"> <strong>Message:</strong> {notification.message}</p>
                     <div className="mt-4">
                       <p><strong>Room No:</strong> {notification.roomNo}</p>
