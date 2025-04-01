@@ -10,7 +10,7 @@ const Topbar = () => {
       <h2 style={{ fontSize: "22px", fontWeight: "bold" }}>Admin Management</h2>
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <span style={{cursor:"pointer"}} onClick={() => navigate('/adminNotifications')}>🔔</span>
-        <span>👤</span>
+        <span style={{cursor:"pointer"}} onClick={() => navigate('/adminAnnouncements')}>👤</span>
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ const HomePage = () => {
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden flex mb-4">
                   <div>
                     <img
-                      style={{ width: "200px", height: "180px" }}
+                      style={{ width: "200px", height: "200px" }}
                       src={roomImg}
                       alt="Notification"
                       className="w-full h-28 object-cover"
