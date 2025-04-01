@@ -119,7 +119,7 @@ const AdminAnnouncements = () => {
             </span>
             <input
               type="text"
-              placeholder="Search announcements..."
+              placeholder="Search User..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="border p-2 rounded-lg w-64"
